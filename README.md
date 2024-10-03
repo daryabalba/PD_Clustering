@@ -1,9 +1,26 @@
-# PD_Clustering
+# PD_clustering_project
 
-The repository contains the code of HSE Center of Language and Brain's project entitled Digital Instruments for Treating and Evaluating Language and Mental Disorders (Цифровые инструменты для коррекции и оценки речевых и психических расстройств) (https://stratpro.hse.ru/resilient-brain/#subproject2).
-It contains the preprocessing of language materials, the implementation of clustering algorithm according to Lundin et. al (https://www.sciencedirect.com/science/article/abs/pii/S016517812200018X) and metrics calculation.
+# Brief description
 
-Данный репозиторий создан в рамках проекта "Цифровые инструменты для коррекции и оценки речевых и психических расстройств" Центра Языка и Мозга НИУ ВШЭ - Нижний Новгород. 
-Репозиторий содержит следующие блоки кода: предобработка языковых материалов, реализация алгоритма кластеризации согласно работе Lundin et. al (https://www.sciencedirect.com/science/article/abs/pii/S016517812200018X) и подсчет метрик кластеризации. Более подробное описание каждого блока приведено ниже.
+The repository contains the code of HSE Center of Language and Brain's project entitled Digital Instruments for Treating and Evaluating Language and Mental Disorders ([Цифровые инструменты для коррекции и оценки речевых и психических расстройств](https://stratpro.hse.ru/resilient-brain/#subproject2)). It contains the preprocessing of language materials, the implementation of clustering algorithm according to [Lundin et. al](https://www.sciencedirect.com/science/article/abs/pii/S016517812200018X) and metrics calculation.
 
-## Описание структуры
+# Краткое описание проекта
+
+Данный репозиторий создан в рамках проекта "[Цифровые инструменты для коррекции и оценки речевых и психических расстройств](https://stratpro.hse.ru/resilient-brain/#subproject2)" Центра Языка и Мозга НИУ ВШЭ - Нижний Новгород. 
+
+**Репозиторий содержит следующие блоки кода**: 
+
+- предобработка языковых материалов,
+- реализация алгоритма кластеризации согласно работе [Lundin et. al](https://www.sciencedirect.com/science/article/abs/pii/S016517812200018X)
+- подсчет метрик кластеризации.
+
+Более подробное описание каждого блока приведено ниже.
+
+# Описание структуры
+
+1. Описание продукта
+2. [Предобработка языковых материалов](https://www.notion.so/PD_clustering_project-114dcd5b3fb88024a3c2e2b517a2a04e?pvs=21)
+3. Алгоритм кластеризации
+4. Метрики кластеризации
+
+## Предобработка языковых материалов
