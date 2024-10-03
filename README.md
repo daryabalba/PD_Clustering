@@ -1,4 +1,4 @@
-# PD_clustering_project
+# PD_Clustering
 
 # Brief description
 
