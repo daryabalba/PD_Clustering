@@ -38,14 +38,14 @@ The repository contains the code of HSE Center of Language and Brain's project e
 
 ```python
   def tokenize(self, text):
-    """
-    Getting all tokens, except punctuation marks
-    Return: list of tokens with stopwords, list of tokens without stopwords
-    """
-    tokens = word_tokenize(text)
-    tokens_w_stops = [i.lower() for i in tokens if (i not in punctuation)]
-    tokens_wo_stops = [i.lower() for i in tokens if (i not in punctuation) and (i not in self.stop_words)]
-    return tokens_w_stops, tokens_wo_stops
+		"""
+		Getting all tokens, except punctuation marks
+		Return: list of tokens with stopwords, list of tokens without stopwords
+		"""
+		tokens = word_tokenize(text)
+		tokens_w_stops = ', '.join([i.lower() for i in tokens if (i not in punctuation)])
+		tokens_wo_stops = ', '.join([i.lower() for i in tokens if (i not in punctuation) and (i not in self.stop_words)])
+		return tokens_w_stops, tokens_wo_stops
 ```
 
 А также для **лемматизации** приходящего на вход текста в двух вариантах:
@@ -57,11 +57,58 @@ The repository contains the code of HSE Center of Language and Brain's project e
     Return: list of lemmas with stopwords, list of lemmas without stopwords
     """
     doc = self.nlp(text)
-    lemmas = [token.lemma_.lower() for token in doc if (token.text not in punctuation)]
-    lemmas_without_stops = [token.lemma_.lower() for token in doc if (token.text not in punctuation) and (token.text not in self.stop_words)]
+    lemmas = ', '.join([token.lemma_.lower() for token in doc if (token.text not in punctuation)])
+    lemmas_without_stops = ', '.join([token.lemma_.lower() for token in doc if (token.text not in punctuation) and (token.text not in self.stop_words)])
     return lemmas, lemmas_without_stops
 ```
 
 Предобработанные токены не содержат знаков препинания, приведены к нижнему регистру, список стоп-слов взят из [библиотеки NLTK](https://www.nltk.org/).
 
 ## Алгоритм кластеризации
+
+1. [DataExtraction module](dataExtraction_module)
+2. [ClustersData module](clustersdata_module)
+3. [Clusterizer module](clusterizer_module)
+4. [Vectorizer module](vectorizer_module)
+
+### 1. DataExtraction module
+
+Извлекает информацию из таблицы Excel, содержащей предобработанные тексты:
+
+- список ID респондентов
+
+```python
+def get_ids(self, sheet_name: str = 'healthy') -> pd.DataFrame:
+	  """
+	  Getting ID column
+	  """
+	  if sheet_name == 'healthy':
+	      return self.dataset_norm['speakerID']
+	  return self.dataset_pd['ID']
+```
+
+- список предобработанных текстов в 4 вариантах (в формате Series)
+
+```python
+def get_series(self,
+               sheet_name: str,
+               category: str) -> pd.DataFrame:
+    """
+    Getting one of 8 columns:
+      from one of the 2 pages of the dataset
+      from one of the 4 categories
+
+    sheet_name: healthy | PD
+    category: tokens | tokens_without_stops | lemmas | lemmas_without_stops
+    """
+    if sheet_name == 'healthy':
+        return self.dataset_norm[category]
+
+    return self.dataset_pd[category]
+```
+
+### 2. ClustersData module
+
+### 3. Clusterizer module
+
+### 4. Vectorizer module
