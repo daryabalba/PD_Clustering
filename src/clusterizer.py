@@ -7,15 +7,6 @@ class Clusterizer:
     def __init__(self, model: gensim.models.fasttext.FastTextKeyedVectors) -> None:
         self._model = model
 
-    def get_vector(self, word):
-        """
-        Getting vector depending on the model
-        """
-        if isinstance(self._model, gensim.models.fasttext.FastTextKeyedVectors):
-            return self._model[word]
-
-        return self._model.get_word_vector(word)
-
     def get_cosine_similarity(self, w1, w2):
         """
         Getting cosine similarity depending on model
@@ -83,13 +74,13 @@ class Clusterizer:
         """
         centroids_dict = {}
         for cluster in cluster_sequence:
-            centroid = sum(self.get_vector(word) for word in cluster) / len(cluster)
+            centroid = sum(self.model[word] for word in cluster) / len(cluster)
             centroids_dict[tuple(cluster)] = centroid
 
         Si_values_dict = {}
         for cluster in cluster_sequence:
             cluster_centroid = centroids_dict[tuple(cluster)]
-            Si = sum(self._custom_similarity(self.get_vector(word), cluster_centroid)
+            Si = sum(self._custom_similarity(self.model[word], cluster_centroid)
                     for word in cluster) / len(cluster)
             Si_values_dict[tuple(cluster)] = Si
 
