@@ -1,4 +1,3 @@
-# import fasttext
 import gensim
 import numpy as np
 
