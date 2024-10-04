@@ -108,11 +108,45 @@ def get_series(self,
     return self.dataset_pd[category]
 ```
 
+
 ### Models module
+
+Используется для импорта модели Geowac (***geowac_lemmas_none_fasttextskipgram_300_5_2020*)** из корпуса [RusVectores](https://rusvectores.org/ru/models/). Модель построена на корпусе Geowac с использованием fasttext.
 
 ### Vectorizer module
 
+Получает на вход модель для векторизации. Записывает векторы меток **Beginning of Sequence** (BOS), **Pre-End of Sequence** (PEOS) и **End of Sequence** (EOS) в словарь векторов. Данные метки необходимы для последующей кластеризации, т.к. первое слово имеет косинусное расстояние равное 0 за неимением предшествующих (косинусное расстояние считается между текущим словом и предыдущим).
+
+Модуль необходим для создания словаря в json формате, в котором хранятся слова и их векторные представления. **Структура словаря**: *ключ — слово, значение — вектор, полученный из модели векторизации*. Словарь строится по корпусу текстов и обновляется при появлении новых слов.
+
+**Содержит следующие функции**:
+
+1. Функция обновления внутреннего словаря класса `update_dict(self, words: str)`
+2. Функция обновления json-файла `update_json(self)`
+3. Функция создания последовательности токенов с метками начала и конца последовательности `get_sequence(words_string: str)`
+4. Функция getter словаря `get_dictionary(self)`
+
 ### Clusterizer module
+
+<aside>
+💡
+
+**TLDR**: Модуль содержит функции кластеризации текста и оценки качества кластеризации (*Davies Bouldin index + Silhouette Score*)
+
+</aside>
+
+Кластеризация проводится по формуле, предложенной в работе [Lundin et al.](https://www.sciencedirect.com/science/article/abs/pii/S016517812200018X), согласно которой для последовательности слов $A, B, C, D$ **переключение находится после слова** $B$ в случае, **когда** $S(A, B) > S(B, C)$ и $S(B, C) < S(C, D)$, где $S(A, B)$ – косинусная близость между векторами слов $A$ и $B$.
+
+Косинусное расстояние рассчитывается по формуле: `np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))`, где v1, v2 — векторы слов. В случае с моделью Geowac используется метод similarity.
+
+**Содержит следующие функции**:
+
+1. Функция подсчета косинусного расстояния `get_cosine_similarity(self, w1, w2)`
+2. Функция кластеризации `cluster(self, word_sequence: list[str])` 
+3. Функция подсчета расстояния между центроидами `_custom_similarity(embedding_1, embedding_2)`. Центроид — вектор среднего значения последовательностей embedding_1, embedding_2
+4. Функция расчета [Davies Bouldin index](https://scikit-learn.org/stable/modules/clustering.html#davies-bouldin-index) `davies_bouldin_index(self, cluster_sequence: list[list[str]])`
+5. Функция подсчета [silhouette score](https://scikit-learn.org/stable/modules/clustering.html#silhouette-coefficient) `silhouette_score(self, cluster_sequence: list[list[str]])`
+6. Функция оценки результатов кластеризации по всем метрикам `evaluate_clustering(DB_values_page: list[float], silhouette_values: list[float])`
 
 ### ClustersDataSaver module
 
@@ -122,132 +156,13 @@ def get_series(self,
 
 **Содержит следующие функции:**
 
-1. Функция подсчета **количества переключений между кластерами**
-
-```python
-def count_num_switches(self,
-                       sheet_name: str,
-                       category: str) -> None:
-        """
-        Count number of switches for each cell
-        """
-        if sheet_name == 'healthy':
-            new_column_name = f'Switch_number_{category}'
-            self.healthy_data[new_column_name] = self.healthy_data[category].apply(lambda x: len(x) - 1)
-
-        else:
-            new_column_name = f'Switch_number_{category}'
-            self.impediment_data[new_column_name] = self.impediment_data[category].apply(lambda x: len(x) - 1)
-```
-
-2. Функция подсчета **среднего размера кластеров**
-
-```python
-def count_mean_cluster_size(self,
-                            sheet_name: str,
-                            category: str) -> None:
-        """
-        Count mean cluster size for each row
-        """
-        if sheet_name == 'healthy':
-            new_column_name = f'Mean_cluster_size_{category}'
-            self.healthy_data[new_column_name] = self.healthy_data[category].apply(self.avg_cluster_size)
-
-        else:
-            new_column_name = f'Mean_cluster_size_{category}'
-            self.impediment_data[new_column_name] = self.impediment_data[category].apply(self.avg_cluster_size)
-```
-
-3. Функция подсчета **среднего расстояния между кластерами**
-
-```python
-def count_mean_distances(self,
-                         sheet_name: str,
-                         category: str):
-    """
-    Counting distances for all columns
-    """
-    if sheet_name == 'healthy':
-        new_column_name = f'Mean_distance_{category}'
-        self.healthy_data[new_column_name] = self.healthy_data[category].apply(self.avg_cluster_distance)
-
-    else:
-new_column_name = f'Mean_distance_{category}'
-        self.impediment_data[new_column_name] = self.impediment_data[category].apply(self.avg_cluster_distance)
-```
-
-4. Функция подсчета [silhouette score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html)
-
-```python
-def silhouette_score(self, cluster_sequence):
-  silhouette_coefs = []
-
-  for idx, cluster in enumerate(cluster_sequence):
-      for word_1 in cluster:
-
-          a = sum(self.model.similarity(word_1, word_2)
-                  for word_2 in cluster if word_1 != word_2) / len(cluster)
-
-          if idx != len(cluster_sequence) - 1:
-              b = sum(self.model.similarity(word_1, word_2)
-                      for word_2 in cluster_sequence[idx + 1]) / len(cluster_sequence[idx + 1])
-          else:
-              b = sum(self.model.similarity(word_1, word_2)
-                      for word_2 in cluster_sequence[idx - 1]) / len(cluster_sequence[idx - 1])
-
-          s = (b - a) / max(a, b)
-          silhouette_coefs.append(s)
-
-  if silhouette_coefs:
-      return sum(silhouette_coefs) / len(silhouette_coefs)
-  return np.NaN
-```
-
-5. Функция подсчета t-score внутри одного кластера
-
-```python
-@staticmethod
-def cluster_t_score(f_n, f_c, f_nc, N):
-    if f_nc == 0:
-        return 0
-    numerator = f_nc - f_n * f_c / N
-    denominator = np.sqrt(f_nc)
-    return numerator / denominator
-
-def avg_cluster_t_score(self, cell, column_clusters):
-    all_words = ' '.join([word for cell in column_clusters for cluster in cell for word in cluster])
-    N = len(all_words)
-
-    cell_t_scores = []
-    for cluster in cell:
-        all_wordpairs = list(permutations(cluster, 2))
-
-        pairwise_t_scores = []
-        for wordpair in all_wordpairs:
-            f_n = all_words.count(wordpair[0])
-            f_c = all_words.count(wordpair[1])
-            f_nc = all_words.count(' '.join((wordpair[0], wordpair[1])))
-            f_nc += all_words.count(' '.join((wordpair[1], wordpair[0])))
-
-            t_score = self.cluster_t_score(f_n, f_c, f_nc, N)
-            pairwise_t_scores.append(t_score)
-
-        cell_t_scores.extend(pairwise_t_scores)
-
-return sum(cell_t_scores)
-```
-
-6. Функция сохранения в Excel файл по заданному пути path
-
-```python
-def save_excel(self, path) -> None:
-    """
-    Saving data with clusters to an Excel file
-    """
-    with pd.ExcelWriter(path) as writer:
-        self.healthy_data.to_excel(writer, sheet_name='healthy', index=False)
-        self.impediment_data.to_excel(writer, sheet_name=self.impediment_type, index=False)
-```
+1. Функция подсчета **количества переключений между кластерами** `count_num_switches(self, sheet_name: str, category: str)`
+2. Функция подсчета **среднего размера кластеров** `avg_cluster_size(row: pd.Series)`
+3. Функция подсчета **среднего расстояния между кластерами** `avg_cluster_distance(self, cluster_sequence)`
+4. Функция подсчета [silhouette score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html) `silhouette_score(self, cluster_sequence)`
+5. Функция подсчета [t-score](https://blogs.helsinki.fi/slavica-helsingiensia/files/2019/11/sh34-21.pdf) внутри одного `кластера cluster_t_score(f_n, f_c, f_nc, N)`
+6. Функция подсчета среднего t-score `avg_cluster_t_score(self, cell, column_clusters)`
+7. Функция **сохранения в Excel файл** по заданному пути path `save_excel(self, path)`
 
 Более подробное описание каждой метрики см. в блоке [Метрики кластеризации](#метрики-кластеризации).
 
@@ -257,6 +172,5 @@ def save_excel(self, path) -> None:
 
 - средний **размер кластера** (среднее количество слов, входящих в кластер);
 - среднее **расстояние между кластерами** (считается как расстояние между центроидами кластеров; за центроид берется среднее значение векторов, находящихся в одном кластере);
-- 
-- Среднее значение **t-score в кластере** для каждого человека (метрика, отображающая насколько неслучайной является сила ассоциации между коллокатами; в качестве коллокатов берутся все последовательности из двух слов внутри одного кластера).
-- Среднее значение **silhouette-score** (метрика, отображающая, насколько близок объект к своему кластеру по сравнению с другими кластерами: чем больше значение данной метрики, тем ближе объект к своему собственному кластеру).
+- среднее значение **t-score в кластере** для каждого человека (метрика, отображающая насколько неслучайной является сила ассоциации между коллокатами; в качестве коллокатов берутся все последовательности из двух слов внутри одного кластера).
+- среднее значение **silhouette-score** (метрика, отображающая, насколько близок объект к своему кластеру по сравнению с другими кластерами: чем больше значение данной метрики, тем ближе объект к своему собственному кластеру).
