@@ -66,12 +66,12 @@ The repository contains the code of HSE Center of Language and Brain's project e
 
 ## Алгоритм кластеризации
 
-1. [DataExtraction module](#1.-dataextraction_module)
+1. [DataExtraction module](#dataextraction-module)
 2. [ClustersData module](clustersdata_module)
 3. [Clusterizer module](clusterizer_module)
 4. [Vectorizer module](vectorizer_module)
 
-### 1. DataExtraction module
+### DataExtraction module
 
 Извлекает информацию из таблицы Excel, содержащей предобработанные тексты:
 
