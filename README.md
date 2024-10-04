@@ -67,10 +67,10 @@ The repository contains the code of HSE Center of Language and Brain's project e
 ## Алгоритм кластеризации
 
 1. [DataExtraction module](#dataextraction-module)
-2. [ClustersData module](#clustersdata-module)
-3. [Clusterizer module](#clusterizer-module)
-4. [Models module](#models-module)
-5. [Vectorizer module](#vectorizer-module)
+2. [Models module](#models-module)
+3. [Vectorizer module](#vectorizer-module)
+4. [Clusterizer module](#clusterizer-module)
+5. [ClustersData module](#clustersdata-module)
 
 ### DataExtraction module
 
@@ -108,10 +108,158 @@ def get_series(self,
     return self.dataset_pd[category]
 ```
 
-### ClustersData module
-
-### Clusterizer module
-
 ### Models module
 
 ### Vectorizer module
+
+### Clusterizer module
+
+### ClustersDataSaver module
+
+Сохраняет в DataFrame **self.healthy_data** и **self.impediment_data** кластеры по каждому формату хранения речевого материала (*токены и леммы со стоп-словами, токены и лемы без стоп-слов;* подробнее см. Предобработка языковых материалов) и метрики кластеризации (подробнее см. Метрики кластеризации).
+
+Получает на вход модель извлечения данных (подробне см. DataExtraction module) и модель векторизации (gensim.models.fasttext.FastTextKeyedVectors, подробнее см. Models module).
+
+**Содержит следующие функции:**
+
+1. Функция подсчета **количества переключений между кластерами**
+
+```python
+def count_num_switches(self,
+                       sheet_name: str,
+                       category: str) -> None:
+        """
+        Count number of switches for each cell
+        """
+        if sheet_name == 'healthy':
+            new_column_name = f'Switch_number_{category}'
+            self.healthy_data[new_column_name] = self.healthy_data[category].apply(lambda x: len(x) - 1)
+
+        else:
+            new_column_name = f'Switch_number_{category}'
+            self.impediment_data[new_column_name] = self.impediment_data[category].apply(lambda x: len(x) - 1)
+```
+
+1. Функция подсчета **среднего размера кластеров**
+
+```python
+def count_mean_cluster_size(self,
+                            sheet_name: str,
+                            category: str) -> None:
+        """
+        Count mean cluster size for each row
+        """
+        if sheet_name == 'healthy':
+            new_column_name = f'Mean_cluster_size_{category}'
+            self.healthy_data[new_column_name] = self.healthy_data[category].apply(self.avg_cluster_size)
+
+        else:
+            new_column_name = f'Mean_cluster_size_{category}'
+            self.impediment_data[new_column_name] = self.impediment_data[category].apply(self.avg_cluster_size)
+```
+
+1. Функция подсчета **среднего расстояния между кластерами**
+
+```python
+def count_mean_distances(self,
+                         sheet_name: str,
+                         category: str):
+    """
+    Counting distances for all columns
+    """
+    if sheet_name == 'healthy':
+        new_column_name = f'Mean_distance_{category}'
+        self.healthy_data[new_column_name] = self.healthy_data[category].apply(self.avg_cluster_distance)
+
+    else:
+new_column_name = f'Mean_distance_{category}'
+        self.impediment_data[new_column_name] = self.impediment_data[category].apply(self.avg_cluster_distance)
+```
+
+1. Функция подсчета [silhouette score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html)
+
+```python
+def silhouette_score(self, cluster_sequence):
+  silhouette_coefs = []
+
+  for idx, cluster in enumerate(cluster_sequence):
+      for word_1 in cluster:
+
+          a = sum(self.model.similarity(word_1, word_2)
+                  for word_2 in cluster if word_1 != word_2) / len(cluster)
+
+          if idx != len(cluster_sequence) - 1:
+              b = sum(self.model.similarity(word_1, word_2)
+                      for word_2 in cluster_sequence[idx + 1]) / len(cluster_sequence[idx + 1])
+          else:
+              b = sum(self.model.similarity(word_1, word_2)
+                      for word_2 in cluster_sequence[idx - 1]) / len(cluster_sequence[idx - 1])
+
+          s = (b - a) / max(a, b)
+          silhouette_coefs.append(s)
+
+  if silhouette_coefs:
+      return sum(silhouette_coefs) / len(silhouette_coefs)
+  return np.NaN
+```
+
+1. Функция подсчета t-score внутри одного кластера
+
+```python
+@staticmethod
+def cluster_t_score(f_n, f_c, f_nc, N):
+    if f_nc == 0:
+        return 0
+    numerator = f_nc - f_n * f_c / N
+    denominator = np.sqrt(f_nc)
+    return numerator / denominator
+
+def avg_cluster_t_score(self, cell, column_clusters):
+    all_words = ' '.join([word for cell in column_clusters for cluster in cell for word in cluster])
+    N = len(all_words)
+
+    cell_t_scores = []
+    for cluster in cell:
+        all_wordpairs = list(permutations(cluster, 2))
+
+        pairwise_t_scores = []
+        for wordpair in all_wordpairs:
+            f_n = all_words.count(wordpair[0])
+            f_c = all_words.count(wordpair[1])
+            f_nc = all_words.count(' '.join((wordpair[0], wordpair[1])))
+            f_nc += all_words.count(' '.join((wordpair[1], wordpair[0])))
+
+            t_score = self.cluster_t_score(f_n, f_c, f_nc, N)
+            pairwise_t_scores.append(t_score)
+
+        cell_t_scores.extend(pairwise_t_scores)
+
+return sum(cell_t_scores)
+```
+
+1. Функция сохранения в Excel файл по заданному пути path
+
+```python
+def save_excel(self, path) -> None:
+    """
+    Saving data with clusters to an Excel file
+    """
+    with pd.ExcelWriter(path) as writer:
+        self.healthy_data.to_excel(writer, sheet_name='healthy', index=False)
+        self.impediment_data.to_excel(writer, sheet_name=self.impediment_type, index=False)
+```
+
+Более подробное описание каждой метрики см. в блоке Метрики кластеризации.
+
+## Метрики кластеризации
+
+Для оценки качества кластеризации использовались следующие метрики:
+
+- средний размер кластера;
+- среднее расстояние между кластерами (считается как расстояние между центроидами кластеров; за центроид берется среднее значение векторов, находящихся в одном кластере);
+- 
+- Среднее значение t-score в кластере для каждого человека по каждой категории (метрика, отображающая насколько неслучайной является сила ассоциации между коллокатами; в качестве коллокатов берутся все последовательности из двух слов внутри одного кластера).
+- Среднее значение silhouette-score (метрика, отображающая, насколько близок объект к своему кластеру по сравнению с другими кластерами: чем больше значение данной метрики, тем ближе объект к своему собственному кластеру).
+- Средний размер кластера для каждого человека.
+- Значение лексического разнообразия – type-token ratio (TTR).
+- Средний размер словарного запаса (количество уникальных слов, названных респондентами одной группы).
