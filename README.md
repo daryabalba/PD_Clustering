@@ -21,7 +21,7 @@ The repository contains the code of HSE Center of Language and Brain's project e
 1. Описание продукта
 2. [Предобработка языковых материалов](#предобработка-языковых-материалов)
 3. [Алгоритм кластеризации](#алгоритм-кластеризации)
-4. Метрики кластеризации
+4. [Метрики кластеризации](#метрики-кластеризации)
 
 ## Предобработка языковых материалов
 
@@ -116,9 +116,9 @@ def get_series(self,
 
 ### ClustersDataSaver module
 
-Сохраняет в DataFrame **self.healthy_data** и **self.impediment_data** кластеры по каждому формату хранения речевого материала (*токены и леммы со стоп-словами, токены и лемы без стоп-слов;* подробнее см. Предобработка языковых материалов) и метрики кластеризации (подробнее см. Метрики кластеризации).
+Сохраняет в DataFrame **self.healthy_data** и **self.impediment_data** кластеры по каждому формату хранения речевого материала (*токены и леммы со стоп-словами, токены и лемы без стоп-слов;* подробнее см. [Предобработка языковых материалов](#предобработка-языковых-материалов)) и метрики кластеризации (подробнее см. [Метрики кластеризации](#метрики-кластеризации)).
 
-Получает на вход модель извлечения данных (подробне см. DataExtraction module) и модель векторизации (gensim.models.fasttext.FastTextKeyedVectors, подробнее см. Models module).
+Получает на вход модель извлечения данных (подробне см. [DataExtraction module](#dataextraction-module) и модель векторизации (gensim.models.fasttext.FastTextKeyedVectors, подробнее см. [Models module](#models-module)).
 
 **Содержит следующие функции:**
 
@@ -140,7 +140,7 @@ def count_num_switches(self,
             self.impediment_data[new_column_name] = self.impediment_data[category].apply(lambda x: len(x) - 1)
 ```
 
-1. Функция подсчета **среднего размера кластеров**
+2. Функция подсчета **среднего размера кластеров**
 
 ```python
 def count_mean_cluster_size(self,
@@ -158,7 +158,7 @@ def count_mean_cluster_size(self,
             self.impediment_data[new_column_name] = self.impediment_data[category].apply(self.avg_cluster_size)
 ```
 
-1. Функция подсчета **среднего расстояния между кластерами**
+3. Функция подсчета **среднего расстояния между кластерами**
 
 ```python
 def count_mean_distances(self,
@@ -176,7 +176,7 @@ new_column_name = f'Mean_distance_{category}'
         self.impediment_data[new_column_name] = self.impediment_data[category].apply(self.avg_cluster_distance)
 ```
 
-1. Функция подсчета [silhouette score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html)
+4. Функция подсчета [silhouette score](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html)
 
 ```python
 def silhouette_score(self, cluster_sequence):
@@ -203,7 +203,7 @@ def silhouette_score(self, cluster_sequence):
   return np.NaN
 ```
 
-1. Функция подсчета t-score внутри одного кластера
+5. Функция подсчета t-score внутри одного кластера
 
 ```python
 @staticmethod
@@ -237,7 +237,7 @@ def avg_cluster_t_score(self, cell, column_clusters):
 return sum(cell_t_scores)
 ```
 
-1. Функция сохранения в Excel файл по заданному пути path
+6. Функция сохранения в Excel файл по заданному пути path
 
 ```python
 def save_excel(self, path) -> None:
@@ -249,7 +249,7 @@ def save_excel(self, path) -> None:
         self.impediment_data.to_excel(writer, sheet_name=self.impediment_type, index=False)
 ```
 
-Более подробное описание каждой метрики см. в блоке Метрики кластеризации.
+Более подробное описание каждой метрики см. в блоке [Метрики кластеризации](#метрики-кластеризации).
 
 ## Метрики кластеризации
 
