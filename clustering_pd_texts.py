@@ -75,11 +75,6 @@ def main():
     cluster_saver.save_excel(rf'{project_path}\result\pd_texts\clusters_metrics_dataset.xlsx')
     # vectors = vectoriser.get_dictionary()
 
-    # visualizer = Visualizer(cluster_saver, vectors)
-    #
-    # visualizer.visualize_all('healthy')
-    # visualizer.visualize_all('aphasia')
-
 
 if __name__ == '__main__':
     main()
