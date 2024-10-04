@@ -5,17 +5,9 @@ import json
 class Vectorizer:
     def __init__(self, model: gensim.models.fasttext.FastTextKeyedVectors) -> None:
         self.model = model
-        self._vectors_dictionary = {'BOS': self.get_vector('BOS').tolist(),
-                                    'EOS': self.get_vector('EOS').tolist(),
-                                    'PEOS': self.get_vector('PEOS').tolist()}
-
-    def get_vector(self, word):
-        """
-        Getting vectors depending on the model, that is given
-        """
-        if isinstance(self.model, gensim.models.fasttext.FastTextKeyedVectors):
-            return self.model[word]
-        return self.model.get_word_vector(word)
+        self._vectors_dictionary = {'BOS': self.model['BOS'].tolist(),
+                                    'EOS': self.model['EOS'].tolist(),
+                                    'PEOS': self.model['PEOS'].tolist()}
 
     def update_dict(self, words: str) -> None:
         """
@@ -23,7 +15,7 @@ class Vectorizer:
         """
         for one_word in words.split(', '):
             if one_word not in self._vectors_dictionary:
-                self._vectors_dictionary[one_word] = self.get_vector(one_word).tolist()
+                self._vectors_dictionary[one_word] = self.model[one_word].tolist()
 
     def update_json(self) -> None:
         """
