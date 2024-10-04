@@ -67,9 +67,10 @@ The repository contains the code of HSE Center of Language and Brain's project e
 ## Алгоритм кластеризации
 
 1. [DataExtraction module](#dataextraction-module)
-2. [ClustersData module](clustersdata_module)
-3. [Clusterizer module](clusterizer_module)
-4. [Vectorizer module](vectorizer_module)
+2. [Models module](#models-module)
+3. [ClustersData module](#clustersdata-module)
+4. [Clusterizer module](#clusterizer-module)
+5. [Vectorizer module](#vectorizer-module)
 
 ### DataExtraction module
 
@@ -106,9 +107,10 @@ def get_series(self,
 
     return self.dataset_pd[category]
 ```
+### Models module
 
-### 2. ClustersData module
+### ClustersData module
 
-### 3. Clusterizer module
+### Clusterizer module
 
-### 4. Vectorizer module
+### Vectorizer module
