@@ -24,7 +24,7 @@ The repository contains the code of HSE Center of Language and Brain's project e
 4. [Метрики кластеризации](#метрики-кластеризации)
 
 ## Описание продукта
-Здесь будет схема исследования, но пока ее нет
+Здесь будет схема исследования, но пока ее нет. Подробное описание проделанной работы расположено по [ссылке]().
 
 ## Предобработка языковых материалов
 
@@ -175,4 +175,4 @@ def get_series(self,
 
 ## Результаты кластеризации
 
-Результаты кластеризации хранятся в папке [data](https://github.com/daryabalba/PD_Clustering/tree/main/data).
+Результаты кластеризации хранятся в папке [result](https://github.com/daryabalba/PD_Clustering/tree/main/result).
