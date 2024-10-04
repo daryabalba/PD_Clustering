@@ -41,31 +41,31 @@ The repository contains the code of HSE Center of Language and Brain's project e
 
 ```python
   def tokenize(self, text):
-		"""
-		Getting all tokens, except punctuation marks
-		Return: list of tokens with stopwords, list of tokens without stopwords
-		"""
-		tokens = word_tokenize(text)
-		tokens_w_stops = ', '.join([i.lower() for i in tokens if (i not in punctuation)])
-		tokens_wo_stops = ', '.join([i.lower() for i in tokens if (i not in punctuation) and (i not in self.stop_words)])
-		return tokens_w_stops, tokens_wo_stops
+	"""
+	Getting all tokens, except punctuation marks
+	Return: list of tokens with stopwords, list of tokens without stopwords
+	"""
+	tokens = word_tokenize(text)
+	tokens_w_stops = ', '.join([i.lower() for i in tokens if (i not in punctuation)])
+	tokens_wo_stops = ', '.join([i.lower() for i in tokens if (i not in punctuation) and (i not in self.stop_words)])
+	return tokens_w_stops, tokens_wo_stops
 ```
 
 А также для **лемматизации** приходящего на вход текста в двух вариантах:
 
 ```python
   def lemmatize(self, text):
-    """
-    Getting lemmas from text with and without stopwords
-    Return: list of lemmas with stopwords, list of lemmas without stopwords
-    """
-    doc = self.nlp(text)
-    lemmas = ', '.join([token.lemma_.lower() for token in doc if (token.text not in punctuation)])
-    lemmas_without_stops = ', '.join([token.lemma_.lower() for token in doc if (token.text not in punctuation) and (token.text not in self.stop_words)])
-    return lemmas, lemmas_without_stops
+	"""
+	Getting lemmas from text with and without stopwords
+	Return: list of lemmas with stopwords, list of lemmas without stopwords
+	"""
+	doc = self.nlp(text)
+	lemmas = ', '.join([token.lemma_.lower() for token in doc if (token.text not in punctuation)])
+	lemmas_without_stops = ', '.join([token.lemma_.lower() for token in doc if (token.text not in punctuation) and (token.text not in self.stop_words)])
+	return lemmas, lemmas_without_stops
 ```
 
-Предобработанные токены не содержат знаков препинания, приведены к нижнему регистру, список стоп-слов взят из [библиотеки NLTK](https://www.nltk.org/).
+Предобработанные токены не содержат знаков препинания, приведены к нижнему регистру, список стоп-слов взят из [библиотеки NLTK](https://www.nltk.org/). Для лемматизации использовалась библиотека [SpaCy](https://spacy.io/) (модель [ru_core_news_sm](https://spacy.io/models/ru#ru_core_news_sm)).
 
 ## Алгоритм кластеризации
 
