@@ -187,6 +187,8 @@ def get_series(self,
 
 ## Подсчет стилостатистики
 
+После транскрибирования и ручной проверки тексты не нуждаются в дальнейшей предобработке для подсчета стилостатистики. 
+
 ### SentenceMetrics module
 
 Рассчитывает статистику по предложениям.
@@ -209,8 +211,8 @@ def get_series(self,
 
 **Содержит следующие функции:**
 
-1. Функция подсчета идекса удобочитаемости Флеша-Кинкейда `flesch_kincaid_grade(self)`
-2. Функция подсчета идекса туманности Ганнинга `gunning_fog_index(self)`
+1. Функция подсчета идекса удобочитаемости Флеша-Кинкейда ([Flesch–Kincaid readability tests](https://ling.hse.ru/news/490474121.html)) `flesch_kincaid_grade(self)`
+2. Функция подсчета идекса туманности Ганнинга ([Gunning fog index](https://ling.hse.ru/news/490474121.html)) `gunning_fog_index(self)`
 3. Функция подсчета идекса лексического разнообразия ([Type Token Ratio](https://elib.utmn.ru/jspui/bitstream/ru-tsu/7382/1/humanitates_2020_1_20_34.pdf)) `ttr(self)`
 
 ### StylisticMetrics module
