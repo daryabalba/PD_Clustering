@@ -211,4 +211,22 @@ def get_series(self,
 
 1. Функция подсчета идекса удобочитаемости Флеша-Кинкейда `flesch_kincaid_grade(self)`
 2. Функция подсчета идекса туманности Ганнинга `gunning_fog_index(self)`
-3. Функция подсчета идекса лексического разнообразия (TTR [Type Token Ratio](https://elib.utmn.ru/jspui/bitstream/ru-tsu/7382/1/humanitates_2020_1_20_34.pdf)) `ttr(self)`
+3. Функция подсчета идекса лексического разнообразия ([Type Token Ratio](https://elib.utmn.ru/jspui/bitstream/ru-tsu/7382/1/humanitates_2020_1_20_34.pdf)) `ttr(self)`
+
+### StylisticMetrics module
+
+Рассчитывает [коэффициенты](https://uploads.philology.by/golovin-b.n_.-jazyk-i-statistika-1971_.pdf) текста.
+
+**Содержит следующие функции:**
+
+1. Функция подсчета коэффициента предметности (Pr) `subjectivity_coefficient(self)`
+2. Функция подсчета коэффициента качественности (Qu) `quality_coefficient(self)`
+3. Функция подсчета коэффициента активности (Ac) `activity_coefficient(self)`
+4. Функция подсчета коэффициента динамизма (Din) `dynamism_coefficient(self)`
+5. Функция подсчета коэффициента связности текста (Con) `cohesion_coefficient(self)`
+
+## Поиск ключевых слов
+
+## Поиск коллокаций с ключевыми словами
+
+## Поиск n-грамм (биграмм и триграмм)
