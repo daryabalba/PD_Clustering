@@ -2,7 +2,7 @@
 
 # Brief description
 
-The repository contains the code of HSE Center of Language and Brain's project entitled Speech profile tool for generalized linguistic personality in the diagnosis of mental disorders ([Инструмент для создания речевого профиля обобщенной языковой личности для диагностики ментальных расстройств](https://stratpro.hse.ru/resilient-brain/#subproject14)). It contains the preprocessing of language materials, the implementation of clustering algorithm according to [Lundin et. al](https://www.sciencedirect.com/science/article/abs/pii/S016517812200018X) and metrics calculation.
+The repository contains the code of HSE Center of Language and Brain's project entitled Speech profile tool for generalized linguistic personality in the diagnosis of mental disorders ([Инструмент для создания речевого профиля обобщенной языковой личности для диагностики ментальных расстройств](https://stratpro.hse.ru/resilient-brain/#subproject14)). It contains the preprocessing of language materials, the implementation of clustering algorithm according to [Lundin et. al](https://www.sciencedirect.com/science/article/abs/pii/S016517812200018X) and metrics calculation. In addition, it includes several text analysis modules that allow us to calculate various stylostatictic metrics, as well as search for keywords, collocations, bigrams and trigrams.
 
 # Краткое описание проекта
 
@@ -12,7 +12,11 @@ The repository contains the code of HSE Center of Language and Brain's project e
 
 - предобработка языковых материалов,
 - реализация алгоритма кластеризации согласно работе [Lundin et. al](https://www.sciencedirect.com/science/article/abs/pii/S016517812200018X)
-- подсчет метрик кластеризации.
+- подсчет метрик кластеризации,
+- подсчет стилостатистики,
+- поиск ключевых слов,
+- поиск коллокаций с ключевыми словами,
+- поиск n-грамм (биграмм и триграмм)
 
 Более подробное описание каждого блока приведено ниже.
 
