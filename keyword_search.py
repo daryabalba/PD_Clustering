@@ -1,7 +1,7 @@
 import pandas as pd
-from xml_parser import XMLParser
-from text_processor import TextProcessor
-from metrics_calculator import MetricsCalculator
+from src.xml_parser import XMLParser
+from src.text_processing import TextProcessor
+from src.metrics_calculator import MetricsCalculator
 
 def main():
     # Preparation of the reference corpus
