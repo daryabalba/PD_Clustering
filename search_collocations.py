@@ -1,6 +1,6 @@
 import pandas as pd
-from scr.collocation_finder import CollocationFinder
-from scr.text_processing import TextProcessor
+from src.collocation_finder import CollocationFinder
+from src.text_processing import TextProcessor
 
 def main():
     # The path to the table with the texts
