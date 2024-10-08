@@ -5,29 +5,31 @@ import pandas as pd
 class MetricsCalculator:
     @staticmethod
     def calculate_log_likelihood(f_c, f_ref, e_c, e_r):
-        """Log-Likelihood."""
+        """Log-Likelihood"""
         return 2 * (f_c * math.log(f_c / e_c) + f_ref * math.log(f_ref / e_r))
 
     @staticmethod
     def calculate_t_score(f_c, e_c):
-        """T-Score."""
+        """T-Score"""
         return (f_c - e_c) / math.sqrt(f_c)
 
     @staticmethod
     def calculate_mutual_information(f_c, f_ref, N_c, N_total):
-        """Mutual Information (MI)."""
+        """Mutual Information (MI)"""
         p_wc = f_c / N_c
         p_w = (f_ref + f_c) / N_total
         return math.log2(p_wc / p_w) if p_w != 0 else 0
 
     @staticmethod
     def calculate_dice_coefficient(f_c, f_ref):
-        """Dice."""
+        """Dice"""
         return (2 * f_c) / (f_c + f_ref) if (f_c + f_ref) != 0 else 0
 
     @staticmethod
     def find_keywords_metrics(corpus_texts, reference_texts, text_processor):
-        """Поиск ключевых слов и расчет различных метрик для них."""
+        """
+        Search for keywords and calculate various metrics for them
+        """
         corpus_words = []
         for text in corpus_texts:
             corpus_words.extend(text_processor.process_text(text))
