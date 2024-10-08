@@ -30,11 +30,11 @@ class MetricsCalculator:
         """Поиск ключевых слов и расчет различных метрик для них."""
         corpus_words = []
         for text in corpus_texts:
-            corpus_words.extend(text_processor.preprocess_and_lemmatize(text))
+            corpus_words.extend(text_processor.process_text(text))
 
         reference_words = []
         for text in reference_texts:
-            reference_words.extend(text_processor.preprocess_and_lemmatize(text))
+            reference_words.extend(text_processor.process_text(text))
 
         corpus_freq = Counter(corpus_words)
         reference_freq = Counter(reference_words)
