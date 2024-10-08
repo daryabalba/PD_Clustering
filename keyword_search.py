@@ -15,7 +15,7 @@ def main():
 
     # Text preprocessing
     text_processor = TextProcessor()
-    reference_text = text_processor.clean_text(reference_text)
+    reference_text = text_processor.process_text(reference_text)
 
     # Calculating metrics
     metrics_calculator = MetricsCalculator()
