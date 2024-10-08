@@ -31,6 +31,7 @@ The repository contains the code of HSE Center of Language and Brain's project e
 7. [Поиск коллокаций с ключевыми словами](#поиск-коллокаций-с-ключевыми-словами)
 8. [Поиск n-грамм (биграмм и триграмм)](#поиск-n-грамм)
 
+
 ## Описание продукта
 Здесь будет схема исследования, но пока ее нет. Подробное описание проделанной работы расположено по [ссылке]().
 
@@ -268,3 +269,15 @@ def get_series(self,
 
 ## Поиск n-грамм (биграмм и триграмм)
 
+### NgramExtractor module
+
+Извлекает n-граммы (биграммы и триграммы) из текстов (как из исходных, так и лемматизированных).
+
+**Содержит следующие функции:**
+1. Функция создает n-граммы с помошью `CountVectorizer` и воззвращает таблицу, где каждая строка содержит n-грамму и ее частоту `create_ngrams_df(self, text, n=2)`
+2. Функция вызывает этот процесс для биграмм и триграмм как для исходного текста, так и для лемматизированного, возращая четыре таблицы с результатами `extract_ngrams(self, raw_text, lemmatized_text)`
+3. Функция сорнаняет каждую из четырех таблиц в отдельные листы Exel `save_to_excel(self, bigrams_df, trigrams_df, lemmatized_bigrams_df, lemmatized_trigrams_df, file_name='ngrams.xlsx')`
+
+## Результаты стилостатистики
+
+Результаты стилостатистики хранятся в папке [stylostatistics](https://github.com/daryabalba/PD_Clustering/tree/main/result/stylostatistics).
