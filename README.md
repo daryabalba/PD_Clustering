@@ -212,7 +212,9 @@ def get_series(self,
 **Содержит следующие функции:**
 
 1. Функция подсчета идекса удобочитаемости Флеша-Кинкейда ([Flesch–Kincaid readability tests](https://ling.hse.ru/news/490474121.html)) `flesch_kincaid_grade(self)`
-$$ Flesch-Kincaid Grade Level= {0.39×(общее количество предложений \over общее количество слов )+11.8×(общее количество слов \over общее количество слогов )−15.59} $$
+```math
+Flesch-Kincaid Grade Level= {0.39×(общее количество предложений \over общее количество слов)+11.8×(общее количество слов \over общее количество слогов )−15.59}
+```
 3. Функция подсчета идекса туманности Ганнинга ([Gunning fog index](https://ling.hse.ru/news/490474121.html)) `gunning_fog_index(self)`
 4. Функция подсчета идекса лексического разнообразия ([Type Token Ratio](https://elib.utmn.ru/jspui/bitstream/ru-tsu/7382/1/humanitates_2020_1_20_34.pdf)) `ttr(self)`
 
