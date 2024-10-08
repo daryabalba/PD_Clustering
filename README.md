@@ -257,4 +257,14 @@ def get_series(self,
 
 ## Поиск коллокаций с ключевыми словами
 
+### CollocationFinder module
+
+Производит поиск коллокаций с заданными ключевыми словами по метрике [t-score](https://blogs.helsinki.fi/slavica-helsingiensia/files/2019/11/sh34-21.pdf).
+
+**Содержит следующие функции:**
+1. Функция поиска биграмм для заданного слова `get_collocations(self, text, word, top_n=20)`
+2. Функция поиска коллокаций для списка слов в нелемматизированном и лемматизированном тексте `process_texts(self, texts, words, top_n=20, text_processor)`
+3. Функция сохранения найденных коллокаций в Exel-файл `save_to_excel(self, words, raw_collocations, lemmatized_collocations, file_name='collocations.xlsx')`
+
 ## Поиск n-грамм (биграмм и триграмм)
+
