@@ -1,5 +1,5 @@
-from scr.text_processing import TextProcessor
-from scr.ngram_extractor import NgramExtractor
+from src.text_processing import TextProcessor
+from src.ngram_extractor import NgramExtractor
 
 def main():
     # The path to the table with the texts
